@@ -1,48 +1,139 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HttpInspector - Analizador de Cabeceras</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body>
-    <div class="logo-container">
-        <img src="logo.png" alt="HttpInspector Logo">
-    </div>
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #0d1117;
+    color: #c9d1d9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-    <div class="container">
-        <div class="header">
-            <h1>HttpInspector 🕵️</h1>
-            <p>Analiza las cabeceras HTTP de cualquier URL y comprueba la seguridad.</p>
-        </div>
-        
-        <div class="input-section">
-            <div class="input-group">
-                <label for="urlInput">Introduce una URL:</label>
-                <input type="text" id="urlInput" placeholder="https://ejemplo.com">
-            </div>
-            <button id="analyzeBtn">Analizar Cabeceras</button>
-        </div>
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-        <div class="results-section">
-            <h2>Resultados del Análisis</h2>
-            <div id="loading" class="hidden">Cargando...</div>
-            <div id="error-message" class="hidden error-message"></div>
+.logo-container img {
+    width: 150px;
+    height: auto;
+}
 
-            <div class="info-box hidden" id="headers-info">
-                <h3>Cabeceras Completas</h3>
-                <pre id="headers-output"></pre>
-            </div>
+.container {
+    background-color: #161b22;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    margin: 0 auto;
+}
 
-            <div class="info-box hidden" id="security-info">
-                <h3>Análisis de Seguridad</h3>
-                <ul id="security-report"></ul>
-            </div>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html>
+.header {
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #58a6ff;
+    border-bottom: 2px solid #30363d;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #8b949e;
+}
+
+.input-section {
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #30363d;
+    background-color: #010409;
+    color: #e6edf3;
+    text-align: center;
+}
+
+button {
+    background-color: #238636;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+button:hover {
+    background-color: #2ea043;
+}
+
+.results-section {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.info-box {
+    background-color: #21262d;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    margin-top: 20px;
+}
+
+.info-box h3 {
+    color: #58a6ff;
+    margin-top: 0;
+    border-bottom: 1px dashed #30363d;
+    padding-bottom: 5px;
+}
+
+#headers-output {
+    background-color: #010409;
+    color: #e6edf3;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+#security-report {
+    list-style-type: none;
+    padding: 0;
+}
+
+.present {
+    color: #2ea043; /* Verde para las cabeceras presentes */
+}
+
+.missing {
+    color: #ff5858; /* Rojo para las cabeceras faltantes */
+}
+
+.hidden {
+    display: none;
+}
+
+.error-message {
+    color: #ff5858;
+    text-align: center;
+    font-weight: bold;
+}
