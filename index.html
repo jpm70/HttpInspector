@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HttpInspector - Analizador de Cabeceras</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="logo-container">
+        <img src="logo.png" alt="HttpInspector Logo">
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>HttpInspector 🕵️</h1>
+            <p>Analiza las cabeceras HTTP de cualquier URL y comprueba la seguridad.</p>
+        </div>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label for="urlInput">Introduce una URL:</label>
+                <input type="text" id="urlInput" placeholder="https://ejemplo.com">
+            </div>
+            <button id="analyzeBtn">Analizar Cabeceras</button>
+        </div>
+
+        <div class="results-section">
+            <h2>Resultados del Análisis</h2>
+            <div id="loading" class="hidden">Cargando...</div>
+            <div id="error-message" class="hidden error-message"></div>
+
+            <div class="info-box hidden" id="headers-info">
+                <h3>Cabeceras Completas</h3>
+                <pre id="headers-output"></pre>
+            </div>
+
+            <div class="info-box hidden" id="security-info">
+                <h3>Análisis de Seguridad</h3>
+                <ul id="security-report"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
