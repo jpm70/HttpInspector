@@ -1,132 +1,77 @@
-body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #0d1117;
-    color: #c9d1d9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const urlInput = document.getElementById('urlInput');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const loadingMessage = document.getElementById('loading');
+    const errorMessage = document.getElementById('error-message');
+    const headersInfo = document.getElementById('headers-info');
+    const headersOutput = document.getElementById('headers-output');
+    const securityInfo = document.getElementById('security-info');
+    const securityReport = document.getElementById('security-report');
 
-.logo-container {
-    text-align: center;
-    margin-bottom: 20px;
-}
+    // Lista de cabeceras de seguridad comunes a verificar
+    const securityHeaders = [
+        'Content-Security-Policy',
+        'Strict-Transport-Security',
+        'X-Content-Type-Options',
+        'X-Frame-Options',
+        'X-XSS-Protection',
+        'Referrer-Policy',
+        'Permissions-Policy'
+    ];
 
-.logo-container img {
-    width: 150px;
-    height: auto;
-}
+    analyzeBtn.addEventListener('click', async () => {
+        const url = urlInput.value.trim();
+        if (!url) {
+            errorMessage.textContent = 'Por favor, introduce una URL válida.';
+            errorMessage.classList.remove('hidden');
+            return;
+        }
 
-.container {
-    background-color: #161b22;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-    width: 90%;
-    max-width: 800px;
-    text-align: center;
-    margin: 0 auto;
-}
+        // Reiniciar estados
+        headersInfo.classList.add('hidden');
+        securityInfo.classList.add('hidden');
+        errorMessage.classList.add('hidden');
+        headersOutput.textContent = '';
+        securityReport.innerHTML = '';
+        loadingMessage.classList.remove('hidden');
 
-.header {
-    margin-bottom: 30px;
-}
+        try {
+            // Usamos un proxy de CORS público para evitar las restricciones del navegador
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+            const response = await fetch(proxyUrl);
+            
+            // Obtener todas las cabeceras de la respuesta
+            const headers = Object.fromEntries(response.headers.entries());
 
-h1 {
-    color: #58a6ff;
-    border-bottom: 2px solid #30363d;
-    padding-bottom: 15px;
-    margin-bottom: 10px;
-}
+            // Mostrar todas las cabeceras
+            let allHeadersText = '';
+            for (const [key, value] of Object.entries(headers)) {
+                allHeadersText += `${key}: ${value}\n`;
+            }
+            headersOutput.textContent = allHeadersText;
+            headersInfo.classList.remove('hidden');
 
-p {
-    color: #8b949e;
-}
+            // Analizar cabeceras de seguridad
+            securityHeaders.forEach(header => {
+                const li = document.createElement('li');
+                // Buscamos la cabecera sin distinguir mayúsculas/minúsculas
+                const headerFound = Object.keys(headers).find(h => h.toLowerCase() === header.toLowerCase());
 
-.input-section {
-    margin-bottom: 30px;
-}
+                if (headerFound) {
+                    li.innerHTML = `<span class="material-icons present">check_circle</span> <b>${header}</b>: <span class="present">Presente</span>`;
+                } else {
+                    li.innerHTML = `<span class="material-icons missing">cancel</span> <b>${header}</b>: <span class="missing">Faltante</span>`;
+                }
+                securityReport.appendChild(li);
+            });
+            securityInfo.classList.remove('hidden');
 
-.input-group {
-    margin-bottom: 15px;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-input[type="text"] {
-    width: calc(100% - 22px);
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #30363d;
-    background-color: #010409;
-    color: #e6edf3;
-    text-align: center;
-}
-
-button {
-    background-color: #238636;
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 15px;
-}
-
-button:hover {
-    background-color: #2ea043;
-}
-
-.results-section {
-    margin-top: 30px;
-    text-align: left;
-}
-
-.info-box {
-    background-color: #21262d;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #30363d;
-    margin-top: 20px;
-}
-
-#headers-output {
-    background-color: #010409;
-    color: #e6edf3;
-    padding: 10px;
-    border-radius: 5px;
-    white-space: pre-wrap;
-    word-break: break-all;
-}
-
-#security-report {
-    list-style-type: none;
-    padding: 0;
-}
-
-.present {
-    color: #2ea043;
-}
-
-.missing {
-    color: #ff5858;
-}
-
-.hidden {
-    display: none;
-}
-
-.error-message {
-    color: #ff5858;
-    text-align: center;
-    font-weight: bold;
-}
+        } catch (err) {
+            errorMessage.textContent = `Error: No se pudo obtener la URL. Asegúrate de que la URL es correcta (ej. https://google.com).`;
+            errorMessage.classList.remove('hidden');
+            console.error(err);
+        } finally {
+            loadingMessage.classList.add('hidden');
+        }
+    });
+});
