@@ -36,9 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingMessage.classList.remove('hidden');
 
         try {
-            // Usamos un proxy de CORS público para evitar las restricciones del navegador
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-            const response = await fetch(proxyUrl);
+            // Elimina el proxy. Hacemos la solicitud directamente a la URL.
+            const response = await fetch(url);
             
             // Obtener todas las cabeceras de la respuesta
             const headers = Object.fromEntries(response.headers.entries());
@@ -67,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             securityInfo.classList.remove('hidden');
 
         } catch (err) {
-            errorMessage.textContent = `Error: No se pudo obtener la URL. Asegúrate de que la URL es correcta (ej. https://google.com).`;
+            errorMessage.textContent = `Error: No se pudo obtener la URL. Asegúrate de que la URL es correcta (ej. https://google.com). Es posible que el sitio web no permita solicitudes desde tu navegador (error de CORS).`;
             errorMessage.classList.remove('hidden');
             console.error(err);
         } finally {
